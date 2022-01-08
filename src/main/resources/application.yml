@@ -1,0 +1,59 @@
+server:
+  port: 80
+# 数据库连接
+spring:
+  application:
+    name: weixinpay
+  profiles:
+    active: prod
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    locale: zh_CN
+    # 解决json返回过程中long的精度丢失问题
+    generator:
+      write-numbers-as-strings: true
+      write-bigdecimal-as-plain: true
+  mvc:
+    servlet:
+      load-on-startup: 1 #SpringBoot的接口第一次访问都很慢，通过日志可以发现，dispatcherServlet不是一开始就加载的，有访问才开始加载的，即懒加载。
+  main:
+    allow-bean-definition-overriding: true
+
+# mybatis-plus配置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:/mapper/*.xml
+  type-aliases-package: com.kuangstudy.entity
+
+logging:
+  level:
+    root: info
+
+# 微信登录相关
+weixin:
+  login:
+    info:
+      # 微信登录网关
+      gateway: https://api.weixin.qq.com/sns/jscode2session
+      # 微信小程序APPID
+      appid: wx2f823cdc8dfba815
+      # 微信小程序API私钥
+      appsecret: 0139a6d9e93fb88d3d68e0a8a1b06bd6
+      # 微信小程序登录成功回调地址
+      redirectUrl: https://www.kuangstudy.com/login/api/wx/callback
+  pay:
+    info:
+      # 微信支付网关
+      gateway: https://api.mch.weixin.qq.com/pay/unifiedorder
+      # 微信支付API秘钥
+      appsecret: 0139a6d9e93fb88d3d68e0a8a1b06bd6
+      # 微信商户id
+      mchid: 1550648501
+      # 签约产品的类
+      type: JSAPI
+      # 微信小程序APPID
+      appid: wx2f823cdc8dfba815
+      # 支付成功回调地址，如果是微信小程序可以不配置
+      notifyPath: https://api.kuangstudy.com/api/pay/callback
