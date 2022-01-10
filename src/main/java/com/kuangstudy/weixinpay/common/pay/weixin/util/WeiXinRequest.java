@@ -68,7 +68,6 @@ public class WeiXinRequest {
         HttpPost httpPost = new HttpPost(url);
         //解决XStream对出现双下划线的bug
         XStream xStreamForRequestPostData = new XStream(new DomDriver("UTF-8", new XmlFriendlyNameCoder("-_", "_")));
-        //将要提交给API的数据对象转换成XML格式数据Post给API
 
         //将要提交给API的数据对象转换成XML格式数据Post给API
         String postDataXML = null;

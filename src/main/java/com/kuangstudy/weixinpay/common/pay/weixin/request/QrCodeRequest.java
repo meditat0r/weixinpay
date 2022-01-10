@@ -44,8 +44,10 @@ public class QrCodeRequest {
      */
     public Map<String, String> submitWeixinMessage(ReportReqData data) {
         try {
-            data.setTrade_type(data.getTrade_type());//扫一扫支付方式 NATIVE
-            data.setSign(Signature.getSign(data.toMap(), weixinPayProperties.getAppsecret()));//签名字符
+            //扫一扫支付方式 NATIVE
+            data.setTrade_type(data.getTrade_type());
+            //签名字符
+            data.setSign(Signature.getSign(data.toMap(), weixinPayProperties.getAppsecret()));
             // 发起支付请求
             String returnData = WeiXinRequest.submitData(weixinPayProperties.getGateway(), data.toMap());
             // returnData返回的是xml格式
@@ -56,8 +58,9 @@ public class QrCodeRequest {
                 Map<String, String> map = XMLParser.getMapFromXML(returnData);
                 System.out.println("==============================>" + map);
                 if (null != map && !map.isEmpty()) {
-                    String resultCode = (String) map.get(WeiXinConstants.RESULT);
-                    if ("SUCCESS".equals(resultCode)) {//链接生成成功
+                    String resultCode = map.get(WeiXinConstants.RESULT);
+                    //链接生成成功
+                    if ("SUCCESS".equals(resultCode)) {
                         HashMap<String, String> nmap = new HashMap<>();
                         String params = data.getAttach().replace("'", "\"");
                         nmap.put("appId", data.getAppid());

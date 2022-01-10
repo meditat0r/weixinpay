@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.springframework.util.StringUtils.hasText;
+
 /**
  * @author 徐柯
  * @Title:
@@ -41,7 +43,7 @@ public class ApiLoginController extends ApiBaseController {
     @GetMapping("/wxlogin")
     public R callback(String code) {
         // 1：判断code是否合法
-        if (StringUtils.isEmpty(code)) {
+        if (!StringUtils.hasText(code)) {
             throw new KuangShenException(22008, "登录失败，尝试刷新重新扫码登录!");
         }
 
@@ -72,7 +74,7 @@ public class ApiLoginController extends ApiBaseController {
 
             // 4: 解析微信用户得唯一凭证openid
             String openid = (String) resultMap.get("openid");
-            if (StringUtils.isEmpty(openid)) {
+            if (!StringUtils.hasText(openid)) {
                 throw new KuangShenException(22009, "登录失败，尝试刷新重新扫码登录!!!");
             }
 

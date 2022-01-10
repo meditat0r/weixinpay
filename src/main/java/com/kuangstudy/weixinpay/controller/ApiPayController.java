@@ -51,18 +51,24 @@ public class ApiPayController extends  ApiBaseController {
 
         //业务数据
         String productId = request.getParameter("pid");
-        if(StringUtils.isEmpty(productId))return R.error().code(601).message("产品没找到!");
+        if(StringUtils.isEmpty(productId)) {
+            return R.error().code(601).message("产品没找到!");
+        }
 
         // 1：根据产品id查询对应产品信息
         Product product = productService.getById(productId);
-        if(product==null)return R.error().code(601).message("产品没找到!");
+        if(product==null) {
+            return R.error().code(601).message("产品没找到!");
+        }
 
         // 2：生成订单号
         String orderNo = new SnowflakeIdWorker(1, 2).nextId() + "";
         String ip = "127.0.0.1";
         // 3：获取微信小程序的openid
         String openid = request.getParameter("openid");
-        if(StringUtils.isEmpty(openid))return R.error().code(601).message("openid没找到!");
+        if(StringUtils.isEmpty(openid)) {
+            return R.error().code(601).message("openid没找到!");
+        }
         //4：分账接收方用户Id session或者redis
         Integer userId = 1;
 
@@ -78,12 +84,12 @@ public class ApiPayController extends  ApiBaseController {
         data.setMch_id(weixinProperties.getMchid());
         // 回调地址 如果是微信小程序不用配置也可以，最好配置
         data.setNotify_url(weixinProperties.getNotifyPath());
-        // 业务数据
-        data.setBody(product.getTitle());//套餐名称
-        data.setOut_trade_no(orderNo);//订单号
-        data.setProduct_id(productId+"");//商品ID
-        data.setSpbill_create_ip(ip);//ip地址
-        data.setTotal_fee(getMoney(product.getPrice()));//金额
+        // 业务数据(套餐名称/订单号/商品ID/ip地址/金额/)
+        data.setBody(product.getTitle());
+        data.setOut_trade_no(orderNo);
+        data.setProduct_id(productId+"");
+        data.setSpbill_create_ip(ip);
+        data.setTotal_fee(getMoney(product.getPrice()));
         data.setNonce_str(RandomStringGenerator.getRandomStringByLength(32));
 
         json.put("userId", userId);
